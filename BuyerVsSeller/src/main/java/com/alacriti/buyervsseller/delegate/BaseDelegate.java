@@ -39,9 +39,10 @@ public class BaseDelegate {
 
 	protected void endDBTransaction(Connection connection) {
 		//log.debugPrintCurrentMethodName();
+		System.out.println("endDBTransaction");
 		try {
 			connection.commit();
-
+			System.out.println("committed connection");
 		} catch (SQLException e) {
 			System.out.printf("SQLException in endDBTransaction " + e.getMessage(), e);
 			try {
@@ -64,7 +65,7 @@ public class BaseDelegate {
 
 	protected void endDBTransaction(Connection connection, boolean isRollback) {
 		//log.debugPrintCurrentMethodName();
-
+		
 		if (isRollback) {
 			try {
 				connection.rollback();

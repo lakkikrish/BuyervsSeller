@@ -14,6 +14,8 @@ public class ProductVO {
 	public ProductVO(String productName){
 		this.Category_name=productName;
 	}
+	
+	
 	public int getProductId() {
 		return Category_id;
 	}

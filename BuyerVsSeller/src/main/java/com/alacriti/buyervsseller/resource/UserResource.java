@@ -54,10 +54,9 @@ public class UserResource {
 		BuyerDelegate buyerDelegate= new BuyerDelegate();
 		return buyerDelegate.getProducts();
 	}
-	@POST
+	@GET
 	@Path("/{product}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
 	public List getProductDetails(@PathParam("product") ProductVO productVO) {
 		System.out.println("search for products:");
 		BuyerDelegate buyerDelegate= new BuyerDelegate();

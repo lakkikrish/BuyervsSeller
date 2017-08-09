@@ -92,4 +92,17 @@ public class UserRoleBO extends BaseBO {
 		}
 	}
 
+	public boolean getValidBuyer(OrdersVO ordersVO) throws SQLException, Exception {
+		// log.debugPrintCurrentMethodName();
+		System.out.println("enter into BO to create getUserRole");
+		try {
+			UserDAO userDAO = new UserDAO(getConnection());
+			return userDAO.getValidBuyer(ordersVO);
+
+		} catch (Exception e) {
+			System.out.printf("Exception in retrieveMessage " + e.getMessage(),
+					e);
+			throw e;
+		}
+	}
 }

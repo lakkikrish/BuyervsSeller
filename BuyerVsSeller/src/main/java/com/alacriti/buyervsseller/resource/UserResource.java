@@ -46,7 +46,7 @@ public class UserResource {
 
 	}
 	@GET
-	@Path("Products")
+	@Path("Category")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List getProducts(){
 		System.out.println("get the productlist");
@@ -75,6 +75,28 @@ public class UserResource {
 //		return Response.status(200).entity(userRoleVO).build();
 
 	}
+	
+	@GET
+	@Path("/{customerId}/{productId}/{orderStatus}")
+	@Produces(MediaType.APPLICATION_JSON)
+	//public boolean getValidBuyer(@PathParam("customerId,productId,orderStatus") OrdersVO ordersVO) {
+	public boolean getValidBuyer(@PathParam("customerId") int custId,@PathParam("productId") int productId, @PathParam("orderStatus") String orderStatus) {
+	
+		
+		System.out.println("validating buyer:");
+		OrdersVO ordVo = new OrdersVO();
+		ordVo.setCustomerId(custId);
+		ordVo.setProductId(productId);
+		ordVo.setOrderStatus(orderStatus);
+		System.out.println(ordVo.getOrderStatus());
+		BuyerDelegate buyerDelegate= new BuyerDelegate();
+		return buyerDelegate.getValidBuyer(ordVo);
+	
+//		return Response.status(200).entity(userRoleVO).build();
+
+	}
+	
+	
 	/*
 	@GET
 	@Path("/getUserRole/{param}")

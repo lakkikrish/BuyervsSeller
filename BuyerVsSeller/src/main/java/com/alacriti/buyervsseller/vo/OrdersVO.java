@@ -23,9 +23,9 @@ public class OrdersVO {
 		this.country=country;
 		this.zipcode=zipcode;
 	}
-	public OrdersVO(int customerId, int productId,String orderStatus){
-		this.customerId=customerId;
-		this.productId=productId;
+	public OrdersVO(String customerId, String productId,String orderStatus){
+		this.customerId=Integer.parseInt(customerId);
+		this.productId=Integer.parseInt(productId);
 		this.orderStatus=orderStatus;
 	}
 	public int getCustomerId() {

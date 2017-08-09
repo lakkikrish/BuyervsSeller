@@ -98,4 +98,22 @@ public class BuyerDelegate extends BaseDelegate {
 			endDBTransaction(connection, rollBack);
 		}
 	}
+	public boolean getValidBuyer(OrdersVO ordersVO) {
+		System.out.println("getValidBuyer");
+		boolean rollBack = false;
+		Connection connection = null;
+		try {
+			connection = startDBTransaction();
+			setConnection(connection);
+			UserRoleBO userRoleBO= new UserRoleBO(getConnection(ordersVO));
+			return userRoleBO.getValidBuyer(ordersVO);
+		} catch (Exception e) {
+			System.out.printf("Exception in getMessage " + e.getMessage(), e);
+			rollBack = true;
+		} finally {
+			endDBTransaction(connection, rollBack);
+		}
+		return false;
+	}
 }
+

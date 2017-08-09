@@ -13,6 +13,7 @@ import com.alacriti.buyervsseller.vo.LoginVO;
 import com.alacriti.buyervsseller.vo.OrdersVO;
 import com.alacriti.buyervsseller.vo.ProductInfoVO;
 import com.alacriti.buyervsseller.vo.ProductVO;
+import com.alacriti.buyervsseller.vo.ProductsDetailsVO;
 import com.alacriti.buyervsseller.vo.RegisterVO;
 
 public class UserDAO extends BaseDAO {
@@ -28,6 +29,7 @@ public class UserDAO extends BaseDAO {
 
 	}
 
+	// ///////////////////
 	public boolean getUserRole(LoginVO userVO) throws SQLException {
 		// log.debugPrintCurrentMethodName();
 		System.out.println("LoginValidation validatingUser: ");
@@ -78,6 +80,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 
+	// ///////////////////////
 	public void createUserRole(RegisterVO details) throws SQLException {
 		// log.debugPrintCurrentMethodName();
 		System.out.println("enter into DAO to create createUserRole");
@@ -117,6 +120,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 
+	// ////////////////////////
 	public List getProductDetails() {
 
 		System.out.println("get all product details: ");
@@ -141,7 +145,6 @@ public class UserDAO extends BaseDAO {
 		} finally {
 			close(rs);
 			close(stmt);
-
 		}
 		return list;
 	}
@@ -157,6 +160,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 
+	// /////////////////////////////////
 	public PreparedStatement searchCategory(Connection connection, String sqlCmd)
 			throws SQLException {
 		String query = "SELECT Product_Id, Product_Name, Category_Id, Price, Product_Description FROM Lakshmi_BuyervsSeller_ProductInformation WHERE"
@@ -232,6 +236,7 @@ public class UserDAO extends BaseDAO {
 		return list;
 	}
 
+	// ////////////////////////////////////////
 	public void placeOrder(OrdersVO orders) throws SQLException {
 		System.out.println("enter into DAO to create createUserRole");
 		System.out.println("PostingData createUser: ");
@@ -307,6 +312,94 @@ public class UserDAO extends BaseDAO {
 			System.out.printf("Exception in getPreparedStatementCreateUser "
 					+ e.getMessage(), e);
 			throw e;
+		}
+	}
+
+	// ////////////////////////////////////
+	public PreparedStatement getPreparedStatementVerificationOfBuyer(
+			Connection connection, String sqlCmd) throws SQLException {
+		String query = "SELECT * FROM Lakshmi_BuyervsSeller_OrderDetails WHERE (Customer_id=? AND Product_Id=? AND OrderStatus=?)";
+		try {
+			return connection.prepareStatement(query);
+		} catch (SQLException e) {
+			System.out.printf("Exception in getPreparedStatementCreateUser "
+					+ e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	public boolean getValidBuyer(OrdersVO ordersVO) throws SQLException {
+		// log.debugPrintCurrentMethodName();
+		System.out.println(" validatingBuyer: ");
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean isError = false;
+		ConformationVo conform = new ConformationVo();
+		try {
+			String sqlCmd = "sql command";
+			stmt = getPreparedStatementVerificationOfBuyer(getConnection(),
+					sqlCmd);
+			stmt.setInt(1, ordersVO.getCustomerId());
+			stmt.setInt(2, ordersVO.getProductId());
+			stmt.setString(3, ordersVO.getOrderStatus());
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				if (rs.getString("Customer_id") != null) {
+
+					conform.setCheck(true);
+					return conform.getCheck();
+				}
+			}
+		} catch (SQLException e) {
+			System.out.printf("SQLException in getUserRole " + e.getMessage(),
+					e);
+			throw e;
+		} finally {
+			close(stmt, rs);
+		}
+		conform.setCheck(false);
+		return conform.getCheck();
+	}
+//////////////////////////////////////////////
+	public PreparedStatement getPreparedStatementGiveRating(
+			Connection connection, String sqlCmd) throws SQLException {
+		String query = "INSERT INTO Lakshmi_BuyervsSeller_ProductDetails "
+				+ "VALUES(?,?,?,?,?,?)";
+		try {
+			return connection.prepareStatement(query);
+		} catch (SQLException e) {
+			System.out.printf("Exception in getPreparedStatementCreateUser "
+					+ e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	public void GiveRating(ProductsDetailsVO productDetails) throws SQLException {
+		System.out.println("enter into DAO to create createUserRole");
+		System.out.println("PostingData createUser: ");
+		boolean isError = false;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			String sqlCmd = "sql cmd";
+			stmt = getPreparedStatementCreateUserRole(getConnection(), sqlCmd);
+			stmt.setInt(1, productDetails.getProductId());
+			stmt.setString(2, productDetails.getProductName());
+			stmt.setInt(3, productDetails.getRating());
+			stmt.setString(4, productDetails.getComments());
+			stmt.setInt(5, productDetails.getPrice());
+			stmt.setInt(6, productDetails.getCategoryId());
+			stmt.setInt(7, productDetails.getRating());
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			isError = true;
+			System.out.printf(
+					"SQLException in createUserRole " + e.getMessage(), e);
+			throw e;
+		} finally {
+			close(stmt, rs);
 		}
 	}
 }

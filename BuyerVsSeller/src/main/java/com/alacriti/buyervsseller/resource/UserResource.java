@@ -54,13 +54,16 @@ public class UserResource {
 		BuyerDelegate buyerDelegate= new BuyerDelegate();
 		return buyerDelegate.getProducts();
 	}
+	
 	@GET
-	@Path("/{product}")
+	@Path("/{categoryId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List getProductDetails(@PathParam("product") ProductVO productVO) {
+	public List getProductDetails(@PathParam("categoryId") int categoryId) {
 		System.out.println("search for products:");
 		BuyerDelegate buyerDelegate= new BuyerDelegate();
-		return buyerDelegate.getProductDetails(productVO);
+		ProductVO productVO=new ProductVO();
+		productVO.setProductId(categoryId);
+		return buyerDelegate.getProductsOfCategory(productVO);
 //		return Response.status(200).entity(userRoleVO).build();
 
 	}

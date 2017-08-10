@@ -68,7 +68,24 @@ public class UserRoleBO extends BaseBO {
 		try {
 			UserDAO userDAO = new UserDAO(getConnection());
 			list = userDAO.getProductDetails(productVO);
-			
+
+		} catch (Exception e) {
+			System.out.printf("Exception in retrieveMessage " + e.getMessage(),
+					e);
+			throw e;
+		}
+		System.out.println("last line of getProductDetails in BO");
+		return list;
+	}
+
+	public List getProductsOfCategory(ProductVO productVO) throws SQLException,
+			Exception {
+		System.out.println("enter into BO to pass the all product details of a particular category");
+		List list = null;
+		try {
+			UserDAO userDAO = new UserDAO(getConnection());
+			list = userDAO.getProductsOfCategory(productVO);
+
 		} catch (Exception e) {
 			System.out.printf("Exception in retrieveMessage " + e.getMessage(),
 					e);
@@ -92,7 +109,8 @@ public class UserRoleBO extends BaseBO {
 		}
 	}
 
-	public boolean getValidBuyer(OrdersVO ordersVO) throws SQLException, Exception {
+	public boolean getValidBuyer(OrdersVO ordersVO) throws SQLException,
+			Exception {
 		// log.debugPrintCurrentMethodName();
 		System.out.println("enter into BO to create getUserRole");
 		try {

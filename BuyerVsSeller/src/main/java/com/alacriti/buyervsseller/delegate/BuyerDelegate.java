@@ -82,6 +82,23 @@ public class BuyerDelegate extends BaseDelegate {
 			}
 			return null;
 	}
+	public List getProductsOfCategory(ProductVO productVO){
+		System.out.println("in Buyer delegate ****** getProductInfo of a category");
+		boolean rollBack = false;
+		Connection connection = null;
+		try {
+			connection = startDBTransaction();
+			setConnection(connection);
+			UserRoleBO userRoleBO= new UserRoleBO(getConnection());
+			return userRoleBO.getProductsOfCategory(productVO);
+		} catch (Exception e) {
+			System.out.printf("Exception in getMessage " + e.getMessage(), e);
+			rollBack = true;
+		} finally {
+			endDBTransaction(connection, rollBack);
+		}
+		return null;
+}
 	public void placeOrder(OrdersVO orderVO){
 		System.out.println("in Buyer delegate ****** createUserRole");
 		boolean rollBack = false;

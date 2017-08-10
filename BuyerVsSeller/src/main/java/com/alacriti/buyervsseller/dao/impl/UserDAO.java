@@ -137,7 +137,7 @@ public class UserDAO extends BaseDAO {
 			while (rs.next()) {
 
 				list.add(new ProductVO(rs.getInt("Category_id"), rs
-						.getString("Category_name")));
+						.getString("Category_name"), rs.getString("image")));
 			}
 		} catch (Exception e) {
 			isError = true;
@@ -160,10 +160,167 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 
-	// /////////////////////////////////
+	public PreparedStatement getPrepareStatementgetProductsOfCategory(
+			Connection connection, String sqlCmd) throws SQLException {
+		String query = "SELECT Product_Id, Product_Name, Price,image FROM Lakshmi_BuyervsSeller_ProductInformation WHERE"
+				+ " Category_id =?";
+		try {
+			return connection.prepareStatement(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.printf("Exception in getPreparedStatementGetUserRole "
+					+ e.getMessage(), e);
+			throw e;
+		}
+	}
+	
+	public PreparedStatement getPrepareStatementgetParticularProductDetails(
+			Connection connection, String sqlCmd) throws SQLException {
+		String query = "SELECT Product_Id, Product_Name, Price,image FROM Lakshmi_BuyervsSeller_ProductInformation WHERE"
+				+ " Category_id =?";
+		try {
+			return connection.prepareStatement(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.printf("Exception in getPreparedStatementGetUserRole "
+					+ e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	public List getProductsOfCategory(ProductVO productVO) throws SQLException {
+		// log.debugPrintCurrentMethodName();
+		System.out.println("the DAO of getProductsOfCategory: ");
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean isError = false;
+		ProductInfoVO productInfo;
+		List list = new ArrayList();
+		try {
+			productInfo = new ProductInfoVO();
+			list.clear();
+			String sqlCmd = "sql command";
+			stmt = getPrepareStatementgetProductsOfCategory(getConnection(),
+					sqlCmd);
+			System.out.println(productVO.getProductId());
+			stmt.setInt(1, productVO.getProductId());
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+
+				list.add(new ProductInfoVO(rs.getInt("Product_Id"), rs.getString("Product_Name"), rs
+						.getInt("Price"), rs
+						.getString("image")));
+			}
+			System.out.println(list);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.printf("SQLException in getUserRole " + e.getMessage(),
+					e);
+			throw e;
+		} finally {
+			close(stmt, rs);
+		}
+		return list;
+	}
+
+	public List getParticularProductDetails(ProductVO productVO) throws SQLException {
+		// log.debugPrintCurrentMethodName();
+		System.out.println("DAO for getParticularProductDetails: ");
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean isError = false;
+		ProductInfoVO productInfo;
+		List list = new ArrayList();
+		try {
+			productInfo = new ProductInfoVO();
+			list.clear();
+			String sqlCmd = "sql command";
+			stmt = searchCategory(getConnection(), sqlCmd);
+			System.out.println(productVO.getProductName());
+			stmt.setString(1, productVO.getProductName());
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+
+				list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2), rs
+						.getInt(3), rs.getInt(4), rs.getString(5), rs
+						.getString(6)));
+			}
+
+			System.out.println(list);
+			if (list.isEmpty()) {
+				stmt = searchProduct(getConnection(), sqlCmd);
+				stmt.setString(1, productVO.getProductName());
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+					list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2),
+							rs.getInt(3), rs.getInt(4), rs.getString(5), rs
+									.getString(6)));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.printf("SQLException in getUserRole " + e.getMessage(),
+					e);
+			throw e;
+		} finally {
+			close(stmt, rs);
+		}
+		System.out.println("last line of getProductDetails");
+		return list;
+	}
+
+//////////////////////////////////////////////////////////
+	
+	public List getProductDetails(ProductVO productVO) throws SQLException {
+		// log.debugPrintCurrentMethodName();
+		System.out.println("SearchValidation getProductDetails: ");
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean isError = false;
+		ProductInfoVO productInfo;
+		List list = new ArrayList();
+		try {
+			productInfo = new ProductInfoVO();
+			list.clear();
+			String sqlCmd = "sql command";
+			stmt = searchCategory(getConnection(), sqlCmd);
+			System.out.println(productVO.getProductName());
+			stmt.setString(1, productVO.getProductName());
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+
+				list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2), rs
+						.getInt(3), rs.getInt(4), rs.getString(5), rs
+						.getString(6)));
+			}
+
+			System.out.println(list);
+			if (list.isEmpty()) {
+				stmt = searchProduct(getConnection(), sqlCmd);
+				stmt.setString(1, productVO.getProductName());
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+					list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2),
+							rs.getInt(3), rs.getInt(4), rs.getString(5), rs
+									.getString(6)));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.printf("SQLException in getUserRole " + e.getMessage(),
+					e);
+			throw e;
+		} finally {
+			close(stmt, rs);
+		}
+		System.out.println("last line of getProductDetails");
+		return list;
+	}
+
 	public PreparedStatement searchCategory(Connection connection, String sqlCmd)
 			throws SQLException {
-		String query = "SELECT Product_Id, Product_Name, Category_Id, Price, Product_Description FROM Lakshmi_BuyervsSeller_ProductInformation WHERE"
+		String query = "SELECT Product_Id, Product_Name, Category_Id, Price, Product_Description,image FROM Lakshmi_BuyervsSeller_ProductInformation WHERE"
 				+ " Category_id =(SELECT Category_Id FROM "
 				+ "Lakshmi_BuyervsSeller_Product_Category WHERE category_Name=?);";
 		try {
@@ -190,52 +347,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 
-	public List getProductDetails(ProductVO productVO) throws SQLException {
-		// log.debugPrintCurrentMethodName();
-		System.out.println("SearchValidation getProductDetails: ");
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		boolean isError = false;
-		ProductInfoVO productInfo;
-		List list = new ArrayList();
-		try {
-			productInfo = new ProductInfoVO();
-			list.clear();
-			String sqlCmd = "sql command";
-			stmt = searchCategory(getConnection(), sqlCmd);
-			System.out.println(productVO.getProductName());
-			stmt.setString(1, productVO.getProductName());
-			rs = stmt.executeQuery();
-			int i = 0;
-			while (rs.next()) {
-				System.out.println(++i);
-				list.add(new ProductInfoVO(rs.getInt("Product_Id"), rs
-						.getString("Product_Name"), rs.getInt("Category_Id"),
-						rs.getInt("Price"), rs.getString("Product_Description")));
-			}
-
-			System.out.println(list);
-			if (list.isEmpty()) {
-				stmt = searchProduct(getConnection(), sqlCmd);
-				stmt.setString(1, productVO.getProductName());
-				rs = stmt.executeQuery();
-				while (rs.next()) {
-					list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2),
-							rs.getInt(3), rs.getInt(4), rs.getString(5)));
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.printf("SQLException in getUserRole " + e.getMessage(),
-					e);
-			throw e;
-		} finally {
-			close(stmt, rs);
-		}
-		System.out.println("last line of getProductDetails");
-		return list;
-	}
-
+	
 	// ////////////////////////////////////////
 	public void placeOrder(OrdersVO orders) throws SQLException {
 		System.out.println("enter into DAO to create createUserRole");
@@ -360,7 +472,8 @@ public class UserDAO extends BaseDAO {
 		conform.setCheck(false);
 		return conform.getCheck();
 	}
-//////////////////////////////////////////////
+
+	// ////////////////////////////////////////////
 	public PreparedStatement getPreparedStatementGiveRating(
 			Connection connection, String sqlCmd) throws SQLException {
 		String query = "INSERT INTO Lakshmi_BuyervsSeller_ProductDetails "
@@ -374,7 +487,8 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 
-	public void GiveRating(ProductsDetailsVO productDetails) throws SQLException {
+	public void GiveRating(ProductsDetailsVO productDetails)
+			throws SQLException {
 		System.out.println("enter into DAO to create createUserRole");
 		System.out.println("PostingData createUser: ");
 		boolean isError = false;

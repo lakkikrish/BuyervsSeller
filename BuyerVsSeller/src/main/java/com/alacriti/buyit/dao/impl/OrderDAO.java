@@ -27,7 +27,6 @@ public class OrderDAO extends BaseDAO{
 
 	public boolean placeOrder(OrdersVO orders) throws SQLException {
 		log.debug("OrderDAO******placeOrder");
-		System.out.println("enter into the orderplacing");
 		boolean isError = false;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -51,9 +50,8 @@ public class OrderDAO extends BaseDAO{
 		}
 	}
 
-	public int getAddresses( OrdersVO address) throws SQLException {
+	public int setAddresses( OrdersVO address) throws SQLException {
 		log.debug("OrderDAO******placeOrder");
-		System.out.println("entered into the address table");
 		boolean isError = false;
 		PreparedStatement stmt = null;
 		PreparedStatement stmt1 = null;
@@ -97,7 +95,7 @@ public class OrderDAO extends BaseDAO{
 			
 		}
 	}
-	public boolean getTransactionDetails(OrdersVO ordersVO) throws SQLException {
+	public boolean setTransactionDetails(OrdersVO ordersVO) throws SQLException {
 		log.debug("OrderDAO******placeOrder");
 
 		boolean isError = false;

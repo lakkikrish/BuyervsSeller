@@ -88,7 +88,7 @@ public class CustomerDAO extends BaseDAO{
 			stmt = getPreparedStatementaddCustomer(getConnection(), sqlCmd);
 			stmt.setString(1, details.getName());
 			stmt.setString(2, details.getEmail());
-			stmt.setInt(3, details.getMobileno());
+			stmt.setLong(3, details.getMobileno());
 			stmt.setString(4, details.getPassword());
 			stmt.executeUpdate();
 	

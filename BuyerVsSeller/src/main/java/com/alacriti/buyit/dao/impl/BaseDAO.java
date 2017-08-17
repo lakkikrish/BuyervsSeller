@@ -6,9 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+
 
 public class BaseDAO {
-	//private static final AppLogger log = LogUtil.getLogger(BaseDAO.class);
+	private static final Logger log = Logger.getLogger(BaseDAO.class);
 	public Long auditEventTransactiondId;
 	public int auditEventId;
 	private Connection connection;
@@ -23,17 +25,14 @@ public class BaseDAO {
 	}
 
 	public Connection getConnection() {
-		//log.debugPrintCurrentMethodName();
 		return connection;
 	}
 
 	public void setConnection(Connection connection) {
-		//log.debugPrintCurrentMethodName();
 		this.connection = connection;
 	}
 
 	public void close(ResultSet rs) {
-		//log.debugPrintCurrentMethodName();
 		if (rs != null) {
 			try {
 				rs.close();
@@ -44,7 +43,6 @@ public class BaseDAO {
 	}
 
 	public void close(Statement stmt) {
-		//log.debugPrintCurrentMethodName();
 		if (stmt != null) {
 			try {
 				stmt.close();
@@ -55,7 +53,6 @@ public class BaseDAO {
 	}
 
 	public void close(PreparedStatement stmt, ResultSet rs) {
-		//log.debugPrintCurrentMethodName();
 		close(stmt);
 		close(rs);
 
@@ -63,10 +60,9 @@ public class BaseDAO {
 
 	protected PreparedStatement getPreparedStatement(Connection connection, String sqlCmd) throws SQLException {
 
-	/*	log.debugPrintCurrentMethodName();
 
-		log.logInfo("getPreparedStatement: " + sqlCmd);
-		log.logInfo("connection: " + connection);*/
+		log.info("getPreparedStatement: " + sqlCmd);
+		log.info("connection: " + connection);
 		try {
 
 			return connection.prepareStatement(sqlCmd);
@@ -77,10 +73,9 @@ public class BaseDAO {
 	}
 	protected Statement getCreateStatement(Connection connection) throws SQLException {
 
-		/*	log.debugPrintCurrentMethodName();
 
-			log.logInfo("getPreparedStatement: " + sqlCmd);
-			log.logInfo("connection: " + connection);*/
+			log.info("getcreateStatement: " );
+			log.info("connection: " + connection);
 			try {
 
 				return connection.createStatement();
@@ -92,22 +87,20 @@ public class BaseDAO {
 	
 
 	protected PreparedStatement getPreparedStatementReturnPK(Connection connection, String sqlCmd) throws SQLException {
-		/*log.debugPrintCurrentMethodName();
 
-		log.logInfo("getPreparedStatement: " + sqlCmd);*/
+		log.info("getPreparedStatement: " + sqlCmd);
 		try {
 
 			return connection.prepareStatement(sqlCmd, Statement.RETURN_GENERATED_KEYS);
 		} catch (SQLException e) {
-			//log.logError("Exception in getPreparedStatementReturnPK " + e.getMessage(), e);
+			log.error("Exception in getPreparedStatementReturnPK " + e.getMessage(), e);
 			throw e;
 		}
 	}
 
 	protected ResultSet executeQuery(PreparedStatement ps) throws SQLException {
-		/*log.debugPrintCurrentMethodName();
 
-		log.logInfo("preparedStatement: " + ps);*/
+		log.info("preparedStatement: " + ps);
 		try {
 
 			return ps.executeQuery();
@@ -118,7 +111,6 @@ public class BaseDAO {
 	}
 
 	protected int executeUpdate(PreparedStatement ps) throws SQLException {
-		//log.debugPrintCurrentMethodName();
 
 		try {
 

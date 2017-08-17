@@ -32,7 +32,7 @@ public class OrderBO extends BaseBO {
 			orderInfoVO = new OrderInfoVO();
 			transactionVO = new TransactionVO();
 			if (order.getPaymentType() == 0) {
-				orderid=orderDAO.getAddresses(order);
+				orderid=orderDAO.setAddresses(order);
 					System.out.println("back to the bo ready to enter into the place order");
 					order.setOrderStatus("1");
 					order.setAddressId(orderid);
@@ -40,10 +40,10 @@ public class OrderBO extends BaseBO {
 					System.out.println(order.getAddressId());
 					return orderDAO.placeOrder(order);
 			} else {
-					boolean completeTransaction = orderDAO.getTransactionDetails(order);
+					boolean completeTransaction = orderDAO.setTransactionDetails(order);
 					System.out.println("payment details " +completeTransaction);
-					orderDAO.getAddresses(order);
-					orderid=orderDAO.getAddresses(order);
+					orderDAO.setAddresses(order);
+					orderid=orderDAO.setAddresses(order);
 					order.setAddressId(orderid);
 					System.out.println(order.getAddressId());
 					if (completeTransaction) {

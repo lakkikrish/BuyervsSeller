@@ -10,35 +10,28 @@ import com.alacriti.buyit.vo.RegisterVO;
 
 public class BaseDelegate {
 
-	//private static final AppLogger log = LogUtil.getLogger(BaseDelegate.class);
 
 	private Connection connection;
 
 	public void setConnection(Connection _connection) {
-		//log.debugPrintCurrentMethodName();
 		this.connection = _connection;
 	}
 
 	public Connection getConnection() {
-		//log.debugPrintCurrentMethodName();
 		return connection;
 	}
 	public Connection getConnection(OrdersVO orderVO) {
-		//log.debugPrintCurrentMethodName();
 		return connection;
 	}
 
 	public Connection getConnection(RegisterVO userRoleVO) {
-		//log.debugPrintCurrentMethodName();
 		return connection;
 	}
 	public Connection getConnection(LoginVO userRoleVO) {
-		//log.debugPrintCurrentMethodName();
 		return connection;
 	}
 
 	protected void endDBTransaction(Connection connection) {
-		//log.debugPrintCurrentMethodName();
 		System.out.println("endDBTransaction");
 		try {
 			connection.commit();
@@ -64,12 +57,10 @@ public class BaseDelegate {
 	}
 
 	protected void endDBTransaction(Connection connection, boolean isRollback) {
-		//log.debugPrintCurrentMethodName();
 		
 		if (isRollback) {
 			try {
 				connection.rollback();
-				//log.logInfo("Rolled Back on some exception....!!!");
 			} catch (SQLException e) {
 				System.out.printf("SQLException in endDBTransaction " + e.getMessage(), e);
 			}
@@ -89,7 +80,6 @@ public class BaseDelegate {
 	}
 
 	protected Connection startDBTransaction() {
-		//log.debugPrintCurrentMethodName();
 		Connection conn = null;
 		try {
 			if (conn == null || conn.isClosed())

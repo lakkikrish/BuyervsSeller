@@ -40,7 +40,6 @@ public class Product {
 		ProductVO productVO = new ProductVO();
 		productVO.setProductId(categoryId);
 		return productDelegate.getProductsOfCategory(productVO);
-		// return Response.status(200).entity(userRoleVO).build();
 
 	}
 
@@ -54,7 +53,6 @@ public class Product {
 		ProductVO productVO = new ProductVO();
 		productVO.setProductId(productId);
 		return productDelegate.getParticularProductDetails(productVO);
-		// return Response.status(200).entity(userRoleVO).build();
 
 	}
 
@@ -67,7 +65,6 @@ public class Product {
 		ProductVO productVO = new ProductVO();
 		productVO.setProductName(productName);
 		return productDelegate.getSearchProduct(productVO);
-		// return Response.status(200).entity(userRoleVO).build();
 
 	}
 

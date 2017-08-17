@@ -65,11 +65,10 @@ public class CustomerBO extends BaseBO {
 	public boolean sendMail(String mailId) throws AddressException,
 			MessagingException {
 		String host = "localhost";
-		final String user = "admin@buyit.com";// change accordingly
+		final String user = "admin@buyit.com";
 
-		String to = mailId;// change accordingly
+		String to = mailId;
 		try {
-			// Get the session object
 			Properties props = new Properties();
 			props.put("smtp.gmail.com", "localhost");
 			props.put("mail.smtp.socketFactory.port", "25");

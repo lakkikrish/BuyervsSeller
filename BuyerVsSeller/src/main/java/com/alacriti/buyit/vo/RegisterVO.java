@@ -4,13 +4,13 @@ public class RegisterVO {
 	private String name;
 	private String email;
 	private String password;
-	private int mobileNo;
+	private Long mobileNo;
 	
 
 	public RegisterVO() {
 		
 	}
-	public RegisterVO(String name,int mobileNo,String email,String password) {
+	public RegisterVO(String name,Long mobileNo,String email,String password) {
 		this.name=name;
 		this.mobileNo=mobileNo;
 		this.email=email;
@@ -35,10 +35,10 @@ public class RegisterVO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public int getMobileno() {
+	public Long getMobileno() {
 		return mobileNo;
 	}
-	public void setMobileno(int mobileNo) {
+	public void setMobileno(Long mobileNo) {
 		this.mobileNo = mobileNo;
 	}
 	

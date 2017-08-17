@@ -32,6 +32,7 @@ public class Customer {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addCustomer(RegisterVO userRoleVO) {
+		
 		log.debug("entered in Resources getRegistered:");
 		CustomerDelegate customerDelegate = new CustomerDelegate();
 		customerDelegate.addCustomer(userRoleVO);
@@ -50,27 +51,23 @@ public class Customer {
 		LoginConformationVO conformation;
 		conformation = customerDelegate.customerLogin(userRoleVO);
 		if (conformation.getCheck()) {
-
+			
 			System.out.println("creating session for login");
 			HttpSession session = request.getSession();
 			session.setAttribute("customerId", conformation.getCustId());
 			session.setAttribute("customerName", conformation.getCustName());
 			System.out.println("this how session looks like :" + session);
 			System.out.println("created session for login");
-
+			
 		}
 		return conformation;
 	}
-
-	// return Response.status(200).entity(userRoleVO).build();
 
 	@GET
 	@Path("checkSession")
 	@Produces(MediaType.TEXT_PLAIN)
 	public boolean checkSessoin(@Context HttpServletRequest request) {
 		SessionUtil sessionUtil = new SessionUtil();
-		// HttpSession session= request.getSession(false);
-		// System.out.println("session in checkSession :"+session.getId());
 		return sessionUtil.checkForSession(request);
 	}
 
@@ -79,16 +76,16 @@ public class Customer {
 	@Produces(MediaType.TEXT_PLAIN)
 	public ConformationVO destroySessoin(@Context HttpServletRequest request) {
 		request.getSession().invalidate();
-		System.out.println("in destroy session resource : ============>>>>>"
-				+ request.getSession(false));
-		ConformationVO conformationVO=new ConformationVO();
+		//System.out.println("in destroy session resource : ============>>>>>"
+	//			+ request.getSession(false));
+		ConformationVO conformationVO = new ConformationVO();
 		if (request.getSession(false) != null) {
 			conformationVO.setFlag(true);
 			return conformationVO;
 		} else
 			conformationVO.setFlag(false);
 
-			return conformationVO;
+		return conformationVO;
 	}
 
 }

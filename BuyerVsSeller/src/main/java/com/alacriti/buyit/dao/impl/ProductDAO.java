@@ -10,10 +10,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.alacriti.buyit.vo.CommentVO;
 import com.alacriti.buyit.vo.ProductInfoVO;
 import com.alacriti.buyit.vo.ProductVO;
 
-public class ProductDAO extends BaseDAO{
+public class ProductDAO extends BaseDAO {
 	public ProductDAO(Connection conn) {
 		super(conn);
 	}
@@ -22,10 +23,8 @@ public class ProductDAO extends BaseDAO{
 
 	}
 
-	
 	private static final Logger log = Logger.getLogger(ProductDAO.class);
 
-	
 	public List getCategories() {
 
 		log.debug("ProductDAO******getCategories");
@@ -59,13 +58,12 @@ public class ProductDAO extends BaseDAO{
 		try {
 			return connection.createStatement();
 		} catch (SQLException e) {
-			log.error("Exception in getPreparedStatementCreateUser "
-					+ e.getMessage(), e);
+			log.error(
+					"Exception in getPreparedStatementCreateUser "
+							+ e.getMessage(), e);
 			throw e;
 		}
 	}
-
-	
 
 	public PreparedStatement getPrepareStatementgetProductsOfCategory(
 			Connection connection, String sqlCmd) throws SQLException {
@@ -75,8 +73,9 @@ public class ProductDAO extends BaseDAO{
 			return connection.prepareStatement(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			log.error("Exception in getPreparedStatementcustomerLogin "
-					+ e.getMessage(), e);
+			log.error(
+					"Exception in getPreparedStatementcustomerLogin "
+							+ e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -98,6 +97,7 @@ public class ProductDAO extends BaseDAO{
 			log.debug(productVO.getProductId());
 			stmt.setInt(1, productVO.getProductId());
 			rs = stmt.executeQuery();
+			log.debug("after execution");
 			while (rs.next()) {
 
 				list.add(new ProductInfoVO(rs.getInt("Product_Id"), rs
@@ -108,8 +108,7 @@ public class ProductDAO extends BaseDAO{
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			log.error("SQLException in getUserRole " + e.getMessage(),
-					e);
+			log.error("SQLException in getUserRole " + e.getMessage(), e);
 			throw e;
 		} finally {
 			close(stmt, rs);
@@ -117,61 +116,67 @@ public class ProductDAO extends BaseDAO{
 		return list;
 	}
 
-	
-	
 	public PreparedStatement getPrepareStatementgetParticularProductDetails(
 			Connection connection, String sqlCmd) throws SQLException {
-		String query = "SELECT pi.Product_Id,Product_Name,pi.Category_Id,pi.Price,Product_Description,image,Rating,Comments"
+		String query = "SELECT pi.Product_Id,Product_Name,pi.Category_Id,pi.Price,"
+				+ "Product_Description,image,avg(Rating)"
 				+ " FROM lakshmi_buyit_product_tbl as pi "
-				+"left join lakshmi_buyit_product_review_tbl as pd on pi.Product_Id=pd.Product_Id where pi.Product_id=?";
+				+ "left join lakshmi_buyit_product_review_tbl as pd on pi.Product_Id=pd.Product_Id where pi.Product_id=?";
 		try {
 			return connection.prepareStatement(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			log.error("Exception in getPreparedStatementcustomerLogin "
-					+ e.getMessage(), e);
+			log.error(
+					"Exception in getPreparedStatementcustomerLogin "
+							+ e.getMessage(), e);
 			throw e;
 		}
 	}
-	
-	
+
 	public List getParticularProductDetails(ProductVO productVO)
 			throws SQLException {
-		log.debug("DAO for get" + productVO.getProductId()
-				+ "ProductDetails: ");
+		log.debug("DAO for get" + productVO.getProductId() + "ProductDetails: ");
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		boolean isError = false;
-		ProductInfoVO productInfo;
 		List list = new ArrayList();
+		List list1 = new ArrayList();
 		try {
-			productInfo = new ProductInfoVO();
+
 			list.clear();
 			String sqlCmd = "sql command";
-			stmt = getPrepareStatementgetParticularProductDetails(getConnection(), sqlCmd);
+			stmt = getPrepareStatementgetCommentsOfProduct(getConnection(),
+					sqlCmd);
+			stmt.setInt(1, productVO.getProductId());
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+
+				list.add(new CommentVO(rs.getString(1), rs.getInt(2), rs
+						.getString(3)));
+			}
+			stmt = getPrepareStatementgetParticularProductDetails(
+					getConnection(), sqlCmd);
 			stmt.setInt(1, productVO.getProductId());
 			log.debug(productVO.getProductId());
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 
-				list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2), rs
+				list1.add(new ProductInfoVO(rs.getInt(1), rs.getString(2), rs
 						.getInt(3), rs.getInt(4), rs.getString(5), rs
-						.getString(6), rs.getInt(7), rs.getString(8)));
+						.getString(6), rs.getInt(7), list));
 			}
-			log.debug(list);
+			log.debug(list1);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			log.error("SQLException in getUserRole " + e.getMessage(),
-					e);
+			log.error("SQLException in getUserRole " + e.getMessage(), e);
 			throw e;
 		} finally {
 			close(stmt, rs);
 		}
 		log.debug("last line of getProductDetails");
-		return list;
+		return list1;
 	}
 
-	
 	public List getSearchProduct(ProductVO productVO) throws SQLException {
 		log.debug("ProductDAO******getSearchProduct");
 		PreparedStatement stmt = null;
@@ -185,31 +190,27 @@ public class ProductDAO extends BaseDAO{
 			String sqlCmd = "sql command";
 			stmt = searchByCategoryName(getConnection(), sqlCmd);
 			log.debug(productVO.getProductName());
-			stmt.setString(1, productVO.getProductName()+"%");
+			stmt.setString(1, productVO.getProductName() + "%");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 
-				list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2), rs
-						.getInt(3), rs.getInt(4), rs.getString(5), rs
-						.getString(6), rs.getInt(7), rs.getString(8)));
+				list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2),rs.getInt(3), rs
+						.getInt(4), rs.getString(5)));
 			}
 
 			log.debug(list);
 			if (list.isEmpty()) {
 				stmt = searchByProductName(getConnection(), sqlCmd);
-				stmt.setString(1, productVO.getProductName()+"%");
+				stmt.setString(1, productVO.getProductName() + "%");
 				rs = stmt.executeQuery();
 				while (rs.next()) {
-					list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2),
-							rs.getInt(3), rs.getInt(4), rs.getString(5), rs
-									.getString(6), rs.getInt(7), rs
-									.getString(8)));
+					list.add(new ProductInfoVO(rs.getInt(1), rs.getString(2),rs.getInt(3), rs
+							.getInt(4), rs.getString(5)));
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			log.error("SQLException in getUserRole " + e.getMessage(),
-					e);
+			log.error("SQLException in getUserRole " + e.getMessage(), e);
 			throw e;
 		} finally {
 			close(stmt, rs);
@@ -218,37 +219,55 @@ public class ProductDAO extends BaseDAO{
 		return list;
 	}
 
-	public PreparedStatement searchByCategoryName(Connection connection, String sqlCmd)
-			throws SQLException {
-		String query = "SELECT pi.Product_Id,Product_Name,pi.Category_Id,pi.Price,Product_Description,image,Rating,Comments"
-				+ " FROM lakshmi_buyit_product_tbl as pi "
-				+ "left join lakshmi_buyit_product_review_tbl as pd on pi.Product_Id=pd.Product_Id where "
-				+ "pi.Category_id =(SELECT Category_Id FROM "
+	public PreparedStatement searchByCategoryName(Connection connection,
+			String sqlCmd) throws SQLException {
+		String query = "SELECT pi.Product_Id,Product_Name,pi.Category_Id,pi.Price,"
+				+ "image FROM lakshmi_buyit_product_tbl as pi "
+				+ "where pi.Category_id =(SELECT Category_Id FROM "
 				+ "lakshmi_buyit_product_category_tbl WHERE category_Name LIKE ?);";
 		try {
 			return connection.prepareStatement(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			log.error("Exception in getPreparedStatementcustomerLogin "
-					+ e.getMessage(), e);
+			log.error(
+					"Exception in getPreparedStatementcustomerLogin "
+							+ e.getMessage(), e);
 			throw e;
 		}
 	}
 
-	public PreparedStatement searchByProductName(Connection connection, String sqlCmd)
-			throws SQLException {
-		String query = "SELECT pi.Product_Id,Product_Name,pi.Category_Id,pi.Price,Product_Description,image,Rating,Comments"
+	public PreparedStatement searchByProductName(Connection connection,
+			String sqlCmd) throws SQLException {
+		String query = "SELECT pi.Product_Id,Product_Name,pi.Category_Id,pi.Price,image"
 				+ " FROM lakshmi_buyit_product_tbl as pi "
-				+ "left join lakshmi_buyit_product_review_tbl as pd on pi.Product_Id=pd.Product_Id WHERE pi.Product_Name LIKE ?";
+				+ " WHERE pi.Product_Name LIKE ?";
 		try {
 
 			return connection.prepareStatement(query);
 		} catch (SQLException e) {
-			log.error("Exception in getPreparedStatementcustomerLogin "
-					+ e.getMessage(), e);
+			log.error(
+					"Exception in getPreparedStatementcustomerLogin "
+							+ e.getMessage(), e);
 			throw e;
 		}
 	}
 
+	public PreparedStatement getPrepareStatementgetCommentsOfProduct(
+			Connection connection, String sqlCmd) throws SQLException {
+		String query = "SELECT Comments,lc.Customer_Id,Customer_Name "
+				+ "FROM lakshmi_buyit_product_review_tbl as lpr left join "
+				+ "(lakshmi_buyit_order_tbl as lo left join lakshmi_buyit_customer_tbl "
+				+ "as lc on lo.Customer_Id=lc.Customer_Id) on "
+				+ "lpr.Order_Id=lo.Order_Id where lpr.Product_Id=?;";
+		try {
+			return connection.prepareStatement(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			log.error(
+					"Exception in getPreparedStatementcustomerLogin "
+							+ e.getMessage(), e);
+			throw e;
+		}
+	}
 
 }

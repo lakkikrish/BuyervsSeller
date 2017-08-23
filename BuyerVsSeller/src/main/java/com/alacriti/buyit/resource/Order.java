@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
@@ -17,18 +18,18 @@ import com.alacriti.buyit.vo.ConformationVO;
 import com.alacriti.buyit.vo.OrdersVO;
 
 @Path("/order")
+
 public class Order {
 	private static final Logger log = Logger.getLogger(Order.class);
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public ConformationVO placeOrders(OrdersVO orderVO,
+	public Response placeOrders(OrdersVO orderVO,
 			@Context HttpServletRequest request) {
 		log.debug("making order for product:");
 		int id = 0;
 		OrderDelegate orderDelegate;
-		SessionUtil sessionUtil = new SessionUtil();
 		HttpSession session = request.getSession(false);
 		ConformationVO conformationVO=null;
 		if (session != null) {
@@ -37,32 +38,41 @@ public class Order {
 
 			orderDelegate = new OrderDelegate();
 			conformationVO =new ConformationVO();
+			System.out.println(orderVO.getCity());
+			System.out.println(orderVO.getCountry());
+
 			conformationVO.setFlag(orderDelegate.placeOrder(orderVO));
-			return conformationVO;
+			//return conformationVO;
+			 return Response.status(200).entity(conformationVO).build();
 		}
 		conformationVO.setFlag(false);
-		return conformationVO;
-		// return Response.status(200).entity(userRoleVO).build();
+		
+		 return Response.status(200).entity(conformationVO).build();
 
 	}
 
 	/*
 	 * @GET
 	 * 
-	 * @Path("/{customerId}/{productId}/{orderStatus}")
+	 * @Path("/{customerId}/{productId}")
 	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) //public boolean
+	 * @Produces(MediaType.APPLICATION_JSON)
+	 *  //public boolean
 	 * getValidBuyer(@PathParam("customerId,productId,orderStatus") OrdersVO
-	 * ordersVO) { public boolean getValidBuyer(@PathParam("customerId") int
+	 * ordersVO) {
+	 *  public boolean getValidBuyer(@PathParam("customerId") int
 	 * custId,@PathParam("productId") int productId, @PathParam("orderStatus")
 	 * String orderStatus) {
 	 * 
 	 * 
-	 * log.debug("validating buyer:"); OrdersVO ordVo = new OrdersVO();
-	 * ordVo.setCustomerId(custId); ordVo.setProductId(productId);
-	 * ordVo.setOrderStatus(orderStatus); log.debug(ordVo.getOrderStatus());
-	 * OrderDelegate orderDelegate= new OrderDelegate(); return
-	 * orderDelegate.getValidBuyer(ordVo);
+	 * log.debug("validating buyer:");
+	 *  OrdersVO ordVo = new OrdersVO();
+	 * ordVo.setCustomerId(custId); 
+	 * ordVo.setProductId(productId);
+	 * ordVo.setOrderStatus(orderStatus); 
+	 * log.debug(ordVo.getOrderStatus());
+	 * OrderDelegate orderDelegate= new OrderDelegate(); 
+	 * return orderDelegate.getValidBuyer(ordVo);
 	 * 
 	 * // return Response.status(200).entity(userRoleVO).build();
 	 * 

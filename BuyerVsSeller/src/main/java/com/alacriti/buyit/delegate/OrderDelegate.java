@@ -18,6 +18,8 @@ public class OrderDelegate extends BaseDelegate {
 			connection = startDBTransaction();
 			setConnection(connection);
 			OrderBO orderBO= new OrderBO(getConnection(orderVO));
+			System.out.println(orderVO.getCity());
+			System.out.println(orderVO.getCountry());
 			return orderBO.placeOrders(orderVO);
 		} catch (Exception e) {
 			log.error("Exception in getMessage " + e.getMessage(), e);

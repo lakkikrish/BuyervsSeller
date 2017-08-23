@@ -50,7 +50,7 @@ public class OrderDAO extends BaseDAO{
 		}
 	}
 
-	public int setAddresses( OrdersVO address) throws SQLException {
+	public int insertAddressofOrder( OrdersVO address) throws SQLException {
 		log.debug("OrderDAO******placeOrder");
 		boolean isError = false;
 		PreparedStatement stmt = null;
@@ -66,6 +66,9 @@ public class OrderDAO extends BaseDAO{
 			stmt = getPreparedStatementPlaceAdress(getConnection(), sqlCmd);
 		
 			stmt.setInt(1, address.getCustomerId());
+			System.out.println(address.getStreet());
+			System.out.println(address.getCity());
+			System.out.println(address.getCountry());
 			stmt.setString(2, address.getStreet());
 			stmt.setString(3, address.getCity());
 			stmt.setString(4, address.getState());
@@ -95,7 +98,7 @@ public class OrderDAO extends BaseDAO{
 			
 		}
 	}
-	public boolean setTransactionDetails(OrdersVO ordersVO) throws SQLException {
+	public boolean insertCardDetails(OrdersVO ordersVO) throws SQLException {
 		log.debug("OrderDAO******placeOrder");
 
 		boolean isError = false;
@@ -110,6 +113,7 @@ public class OrderDAO extends BaseDAO{
 			stmt.setString(3, ordersVO.getCardName());
 			stmt.setString(4, ordersVO.getCardType());
 			stmt.setString(5, ordersVO.getDate());
+			System.out.println(ordersVO.getDate());
 			stmt.setInt(6, ordersVO.getCvv());
 			stmt.executeUpdate();
 			
@@ -256,6 +260,34 @@ public class OrderDAO extends BaseDAO{
 		}
 	}
 
+	public void editRating(ProductsDetailsVO productDetails)
+			throws SQLException {
+		log.debug("OrderDAO******editRating");
+		boolean isError = false;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			String sqlCmd = "sql cmd";
+			stmt = getPreparedStatementGiveRating(getConnection(), sqlCmd);
+			stmt.setInt(1, productDetails.getProductId());
+			stmt.setString(2, productDetails.getProductName());
+			stmt.setInt(3, productDetails.getRating());
+			stmt.setString(4, productDetails.getComments());
+			stmt.setInt(5, productDetails.getPrice());
+			stmt.setInt(6, productDetails.getCategoryId());
+			stmt.setInt(7, productDetails.getRating());
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			isError = true;
+			log.error(
+					"SQLException in createUserRole " + e.getMessage(), e);
+			throw e;
+		} finally {
+			close(stmt, rs);
+		}
+	}
 
 
 }

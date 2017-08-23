@@ -10,7 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
 
@@ -21,8 +20,9 @@ import com.alacriti.buyit.vo.LoginConformationVO;
 import com.alacriti.buyit.vo.LoginVO;
 import com.alacriti.buyit.vo.RegisterVO;
 
-@XmlRootElement
+
 @Path("/customer")
+
 public class Customer {
 
 	private static final Logger log = Logger.getLogger(Customer.class);
@@ -35,8 +35,10 @@ public class Customer {
 		
 		log.debug("entered in Resources getRegistered:");
 		CustomerDelegate customerDelegate = new CustomerDelegate();
-		customerDelegate.addCustomer(userRoleVO);
-		return Response.status(200).entity(userRoleVO).build();
+		//customerDelegate.addCustomer(userRoleVO);
+		ConformationVO conform=new ConformationVO();
+		conform.setFlag(customerDelegate.addCustomer(userRoleVO));
+		return Response.status(200).entity(conform).build();
 
 	}
 
@@ -73,7 +75,7 @@ public class Customer {
 
 	@GET
 	@Path("logout")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public ConformationVO destroySessoin(@Context HttpServletRequest request) {
 		request.getSession().invalidate();
 		//System.out.println("in destroy session resource : ============>>>>>"

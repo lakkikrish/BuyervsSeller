@@ -32,7 +32,14 @@
 			<version>1.2.16</version>
 			<scope>provided</scope>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-multipart-provider -->
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>3.0.19.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>${artifactId}</finalName>

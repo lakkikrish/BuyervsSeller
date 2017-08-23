@@ -1,5 +1,8 @@
 package com.alacriti.buyit.vo;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class OrdersVO {
 	private int customerId;
 	private String street;

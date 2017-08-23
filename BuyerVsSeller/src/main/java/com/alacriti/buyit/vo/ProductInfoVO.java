@@ -1,5 +1,11 @@
 package com.alacriti.buyit.vo;
 
+import java.util.List;
+
+/**
+ * @author lakshmidurgac
+ *
+ */
 public class ProductInfoVO {
 	private int productId;
 	private String productName;
@@ -8,7 +14,7 @@ public class ProductInfoVO {
 	private int price;
 	private String image;
 	private int rating;
-	private String comments;
+	private List comments;
 
 	public ProductInfoVO() {
 		super();
@@ -16,7 +22,7 @@ public class ProductInfoVO {
 	}
 
 	public ProductInfoVO(int productId, String productName, int categoryId,
-			int price, String productDescription, String image ,int rating,String comments) {
+			int price, String productDescription, String image ,int rating,List list) {
 		this.productId = productId;
 		this.productName = productName;
 		this.categoryId = categoryId;
@@ -24,7 +30,7 @@ public class ProductInfoVO {
 		this.price = price;
 		this.image = image;
 		this.rating=rating;
-		this.comments=comments;
+		this.comments=list;
 	}
 
 	public ProductInfoVO(int productId, String productName, int price,
@@ -33,6 +39,15 @@ public class ProductInfoVO {
 		this.productName = productName;
 		this.price = price;
 		this.image = image;
+
+	}
+	public ProductInfoVO(int productId, String productName,int categoryId, int price,
+			String image) {
+		this.productId = productId;
+		this.productName = productName;
+		this.price = price;
+		this.image = image;
+		this.categoryId=categoryId;
 
 	}
 
@@ -52,11 +67,12 @@ public class ProductInfoVO {
 		this.rating = rating;
 	}
 
-	public String getComments() {
+
+	public List getComments() {
 		return comments;
 	}
 
-	public void setComments(String comments) {
+	public void setComments(List comments) {
 		this.comments = comments;
 	}
 

@@ -3,6 +3,7 @@ package com.alacriti.buyit.bo.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -60,6 +61,19 @@ public class CustomerBO extends BaseBO {
 			throw e;
 		}
 		return false;
+	}
+	public boolean isValidData(RegisterVO userVO){
+		boolean result=true;
+		if(userVO.getName().length()<4 || userVO.getName().length()>25){
+			result= false;
+			System.out.println("vaild in name");
+		}
+		if(!Pattern.matches("^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{2,}$", userVO.getPassword())){
+			result= false;
+			System.out.println("vaild in password");
+
+		}
+		return result;
 	}
 
 	public boolean sendMail(String mailId) throws AddressException,
